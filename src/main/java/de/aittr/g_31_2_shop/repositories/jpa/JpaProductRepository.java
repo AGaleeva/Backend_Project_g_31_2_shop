@@ -6,6 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaProductRepository extends JpaRepository<JpaProduct, Integer> {
 
-    @Transactional
-    void deleteByName(String name);
+    JpaProduct findByName(String name);
 }

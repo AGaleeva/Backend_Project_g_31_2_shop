@@ -1,9 +1,11 @@
 package de.aittr.g_31_2_shop.domain.jpa;
 
 import de.aittr.g_31_2_shop.domain.interfaces.Cart;
+import de.aittr.g_31_2_shop.domain.interfaces.Customer;
 import de.aittr.g_31_2_shop.domain.interfaces.Product;
 import jakarta.persistence.*;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,9 +19,16 @@ public class JpaCart implements Cart {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "customer_id")
-    private int customerId;
+    @OneToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
+    @ManyToMany
+    @JoinTable(
+            name = "cart_product",
+            joinColumns = @JoinColumn(name = "cart_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private List<Product> products = new ArrayList<>();
 
     public JpaCart() {
@@ -81,12 +90,12 @@ public class JpaCart implements Cart {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof JpaCart jpaCart)) return false;
-        return id == jpaCart.id && customerId == jpaCart.customerId && Objects.equals(products, jpaCart.products);
+        return id == jpaCart.id && Objects.equals(customer, jpaCart.customer) && Objects.equals(products, jpaCart.products);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, products);
+        return Objects.hash(id, customer, products);
     }
 
     @Override

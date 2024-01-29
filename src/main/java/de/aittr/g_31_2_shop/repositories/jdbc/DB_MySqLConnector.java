@@ -9,7 +9,7 @@ public class DB_MySqLConnector {
     private static final String DB_ADDRESS = "jdbc:mysql://127.0.0.1:3306/";
     private static final String DB_NAME = "31_2_shop";
     private static final String DB_USERNAME = "root";
-    private static final String DB_PASSWORD = "!2024JaRabotaju";
+    private static final String DB_PASSWORD = "123qweasd";
 
     public static Connection getConnection() {
         try {

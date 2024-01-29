@@ -49,6 +49,11 @@ public class CommonProduct implements Product {
     }
 
     @Override
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CommonProduct that)) return false;

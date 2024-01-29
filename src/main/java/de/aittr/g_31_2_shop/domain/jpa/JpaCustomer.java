@@ -21,7 +21,9 @@ public class JpaCustomer implements Customer {
     @Column(name = "is_active")
     private boolean isActive;
 
-    private Cart cart;
+    @OneToOne(mappedBy = "customer") // указывается наименования поля с связанном классе JpaCart
+    private Cart cart;               //  (поле private Customer customer;)
+
 
     public JpaCustomer() {
     }
