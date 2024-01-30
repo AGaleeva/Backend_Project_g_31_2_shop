@@ -21,14 +21,14 @@ public class JpaCustomer implements Customer {
     @Column(name = "is_active")
     private boolean isActive;
 
-    @OneToOne(mappedBy = "customer") // указывается наименования поля с связанном классе JpaCart
-    private Cart cart;               //  (поле private Customer customer;)
+    @OneToOne(mappedBy = "customer") // указывается название поля с связанном классе JpaCart
+    private JpaCart cart;               //  (поле private Customer customer;)
 
 
     public JpaCustomer() {
     }
 
-    public JpaCustomer(int id, String name, boolean isActive, Cart cart) {
+    public JpaCustomer(int id, String name, boolean isActive, JpaCart cart) {
         this.id = id;
         this.name = name;
         this.isActive = isActive;
@@ -72,14 +72,19 @@ public class JpaCustomer implements Customer {
 
     @Override
     public void setCart(Cart cart) {
-        this.cart = cart;
+        try {
+            this.cart = (JpaCart) cart;
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Incompatible Cart type was passed to the setter");
+        }
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof JpaCustomer that)) return false;
-        return id == that.id && isActive == that.isActive && Objects.equals(name, that.name) && Objects.equals(cart, that.cart);
+        return id == that.id && isActive == that.isActive && Objects.equals(name, that.name) && Objects.equals(cart,
+                that.cart);
     }
 
     @Override

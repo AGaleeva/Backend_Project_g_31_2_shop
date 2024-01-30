@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static de.aittr.g_31_2_shop.repositories.jdbc.DB_MySqLConnector.getConnection;
+//import static de.aittr.g_31_2_shop.repositories.jdbc.DB_MySqLConnector.getConnection;
+import static de.aittr.g_31_2_shop.repositories.jdbc.DB_PostgreSql.getConnection;
 
 @Repository
 public class CommonProductRepository implements ProductRepository {

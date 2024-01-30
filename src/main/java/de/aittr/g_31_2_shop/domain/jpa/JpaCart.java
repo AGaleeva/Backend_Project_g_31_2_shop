@@ -21,20 +21,21 @@ public class JpaCart implements Cart {
 
     @OneToOne
     @JoinColumn(name = "customer_id")
-    private Customer customer;
+    private JpaCustomer customer;
 
-    @ManyToMany
-    @JoinTable(
-            name = "cart_product",
-            joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
+    @ManyToMany // аннотация для List<Product> products
+    @JoinTable(name = "cart_product", // название таблицы
+            joinColumns = @JoinColumn(name = "cart_id"),  // название колонки в этой таблице, кот.привязана к
+            // этому объекты
+            inverseJoinColumns = @JoinColumn(name = "product_id") // название колонки, к которой привязан ниже
+            // аннотированный лист
     )
-    private List<Product> products = new ArrayList<>();
+    private List<JpaProduct> products = new ArrayList<>();
 
     public JpaCart() {
     }
 
-    public JpaCart(int id, List<Product> products) {
+    public JpaCart(int id, List<JpaProduct> products) {
         this.id = id;
         this.products = products;
     }
@@ -51,12 +52,28 @@ public class JpaCart implements Cart {
 
     @Override
     public List<Product> getProducts() {
-        return products;
+        return new ArrayList<>(products); // надо вернуть <Product>, а у нас products это <JpaProduct>
+    }
+
+    public void setProducts(List<JpaProduct> products) {
+        this.products = products;
+    }
+
+    public JpaCustomer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(JpaCustomer customer) {
+        this.customer = customer;
     }
 
     @Override
     public void addProduct(Product product) {
-        products.add(product);
+        try {
+            products.add((JpaProduct) product);
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Incompatible Product type was passed to the JpaCart");
+        }
     }
 
     @Override
@@ -71,26 +88,20 @@ public class JpaCart implements Cart {
 
     @Override
     public double getTotalPrice() {
-        return products.stream()
-                .filter(p -> p.isActive())
-                .mapToDouble(Product::getPrice)
-                .sum();
+        return products.stream().filter(p -> p.isActive()).mapToDouble(Product::getPrice).sum();
     }
 
     @Override
     public double getAveragePrice() {
-        return products.stream()
-                .filter( p-> p.isActive())
-                .mapToDouble(Product::getPrice)
-                .average()
-                .orElse(0);
+        return products.stream().filter(p -> p.isActive()).mapToDouble(Product::getPrice).average().orElse(0);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof JpaCart jpaCart)) return false;
-        return id == jpaCart.id && Objects.equals(customer, jpaCart.customer) && Objects.equals(products, jpaCart.products);
+        return id == jpaCart.id && Objects.equals(customer, jpaCart.customer) && Objects.equals(products,
+                jpaCart.products);
     }
 
     @Override

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-//@Service
+@Service
 // отключен, чтобы создать только один бин сервиса для передачи контроллеру - JpaProductService
 public class CommonProductService implements ProductService {
 

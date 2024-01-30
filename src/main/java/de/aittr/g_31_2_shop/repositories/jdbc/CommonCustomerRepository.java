@@ -17,7 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.aittr.g_31_2_shop.repositories.jdbc.DB_MySqLConnector.getConnection;
+//import static de.aittr.g_31_2_shop.repositories.jdbc.DB_MySqLConnector.getConnection;
+import static de.aittr.g_31_2_shop.repositories.jdbc.DB_PostgreSql.getConnection;
 
 @Repository
 public class CommonCustomerRepository implements CustomerRepository {
@@ -64,16 +65,24 @@ public class CommonCustomerRepository implements CustomerRepository {
     @Override
     public List<Customer> getAll() {
         try (Connection connection = getConnection()) {
-            String query =
+            /*String query =            // MySQL-request
                     "select cm.id, cm.name, ct.id, pr.id, pr.name, pr.price from customer as cm join cart as " + "ct " +
                             "on cm.id = ct.customer_id left join cart_product as cp on ct.id = cp.cart_id left join " +
                             "product as pr on cp.product_id = pr.id where cm.is_active = 1 and (pr.is_active = 1 or " +
-                            "pr.is_active is null);";
+                            "pr.is_active is null);";*/
+
+            String query =      // PostgreSQL-request
+                    "SELECT " + CUSTOMER_ID + ", " + CUSTOMER_NAME + ", " + CART_ID +
+                            ", " + PRODUCT_ID + ", " + PRODUCT_NAME + ", " + PRICE +
+                            " from customer as cm join cart as ct on cm.id = ct.customer_id " +
+                            "left join cart_product as cp on ct.id = cp.cart_id " +
+                            "left join product as pr on cp.product_id = pr.id " +
+                            "where cm.is_active = true and (pr.is_active = true OR pr.is_active IS NULL);";
 
             ResultSet resultSet = connection.createStatement().executeQuery(query);
             Map<Integer, Customer> customers = new HashMap<>();
 
-            while (resultSet.next()) {
+            /*while (resultSet.next()) {        // MySQL-request
 
                 int customerId = resultSet.getInt(CUSTOMER_ID);
                 Customer customer;
@@ -93,6 +102,29 @@ public class CommonCustomerRepository implements CustomerRepository {
                 if (productId != 0) {
                     String productName = resultSet.getString(PRODUCT_NAME);
                     double price = resultSet.getDouble(PRICE);
+                    Product product = new CommonProduct(productId, true, productName, price);
+                    customer.getCart().addProduct(product);
+                }*/
+            while (resultSet.next()) {      // PostgreSQL-request
+
+                int customerId = resultSet.getInt(1);  // CUSTOMER_ID
+                Customer customer;
+
+                if (customers.containsKey(customerId)) {
+                    customer = customers.get(customerId);
+                } else {
+                    int cartId = resultSet.getInt(3); // CART_ID
+                    Cart cart = new CommonCart(cartId);
+                    String customerName = resultSet.getString(2);  // CUSTOMER_NAME
+                    customer = new CommonCustomer(customerId, true, customerName, cart);
+                    customers.put(customerId, customer);
+                }
+
+                int productId = resultSet.getInt(4);  // PRODUCT_ID
+
+                if (productId != 0) {
+                    String productName = resultSet.getString(5); // PRODUCT_NAME
+                    double price = resultSet.getDouble(6); // PRICE
                     Product product = new CommonProduct(productId, true, productName, price);
                     customer.getCart().addProduct(product);
                 }

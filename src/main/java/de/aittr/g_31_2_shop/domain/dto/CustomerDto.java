@@ -8,9 +8,9 @@ public class CustomerDto {
 
     private int id;
     private String name;
-    private Cart cart;
+    private CartDto cart;
 
-    public CustomerDto(int id, String name, Cart cart) {
+    public CustomerDto(int id, String name, CartDto cart) {
         this.id = id;
         this.name = name;
         this.cart = cart;
@@ -24,7 +24,7 @@ public class CustomerDto {
         return name;
     }
 
-    public Cart getCart() {
+    public CartDto getCart() {
         return cart;
     }
 
