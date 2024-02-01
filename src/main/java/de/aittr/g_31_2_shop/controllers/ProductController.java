@@ -1,8 +1,12 @@
 package de.aittr.g_31_2_shop.controllers;
 
 import de.aittr.g_31_2_shop.domain.dto.ProductDto;
+import de.aittr.g_31_2_shop.exception_handling.Response;
+import de.aittr.g_31_2_shop.exception_handling.exceptions.FirstTestException;
 import de.aittr.g_31_2_shop.services.interfaces.ProductService;
 import de.aittr.g_31_2_shop.services.mapping.ProductMappingService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +22,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ProductDto save(@RequestBody ProductDto product) {
+    public ProductDto save(@Valid @RequestBody ProductDto product) {
         return service.save(product);
     }
 
@@ -50,5 +54,11 @@ public class ProductController {
     @PutMapping("/{id}")
     public void restoreById(@PathVariable int id) {
         service.restoreById(id);
+    }
+
+    @ExceptionHandler(FirstTestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response handleException(FirstTestException e) {
+        return new Response(e.getMessage());
     }
 }

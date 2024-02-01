@@ -2,6 +2,7 @@ package de.aittr.g_31_2_shop.domain.jpa;
 
 import de.aittr.g_31_2_shop.domain.interfaces.Product;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import java.util.Objects;
 
@@ -9,15 +10,27 @@ import java.util.Objects;
 @Table(name = "product")
 public class JpaProduct implements Product {
 
+    // Pear - OK
+    // pear - x
+    // PEAR - x
+    // PEar - x
+    // Pe - x
+    // Pear7 - x
+    // Pear# - x
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
     @Column(name = "name")
+//    @NotNull
+//    @NotBlank
+    @Pattern(regexp = "[A-Z][a-z]{3,}")
     private String name;
 
     @Column(name = "price")
+    @Min(10)
+    @Max(10000)
     private double price;
 
     @Column(name = "is_active")

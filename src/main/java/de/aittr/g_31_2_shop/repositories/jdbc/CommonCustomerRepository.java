@@ -71,13 +71,22 @@ public class CommonCustomerRepository implements CustomerRepository {
                             "product as pr on cp.product_id = pr.id where cm.is_active = 1 and (pr.is_active = 1 or " +
                             "pr.is_active is null);";*/
 
-            String query =      // PostgreSQL-request
+           /* String query =      // PostgreSQL-request
                     "SELECT " + CUSTOMER_ID + ", " + CUSTOMER_NAME + ", " + CART_ID +
                             ", " + PRODUCT_ID + ", " + PRODUCT_NAME + ", " + PRICE +
                             " from customer as cm join cart as ct on cm.id = ct.customer_id " +
                             "left join cart_product as cp on ct.id = cp.cart_id " +
                             "left join product as pr on cp.product_id = pr.id " +
-                            "where cm.is_active = true and (pr.is_active = true OR pr.is_active IS NULL);";
+                            "where cm.is_active = true and (pr.is_active = true OR pr.is_active IS NULL);";*/
+
+//            PostgreSQL-request with text-block syntax
+
+            String query = """ 
+                            select cm.id, cm.name, ct.id, pr.id, pr.name, pr.price from customer as cm join cart as 
+                            ct on cm.id = ct.customer_id left join cart_product as cp on ct.id = cp.cart_id left join 
+                            product as pr on cp.product_id = pr.id where cm.is_active = true and (pr.is_active = true or 
+                            pr.is_active is null);
+                           """;
 
             ResultSet resultSet = connection.createStatement().executeQuery(query);
             Map<Integer, Customer> customers = new HashMap<>();
