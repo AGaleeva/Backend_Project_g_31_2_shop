@@ -3,6 +3,7 @@ package de.aittr.g_31_2_shop.services.jpa;
 import de.aittr.g_31_2_shop.domain.dto.ProductDto;
 import de.aittr.g_31_2_shop.domain.interfaces.Product;
 import de.aittr.g_31_2_shop.domain.jpa.JpaProduct;
+import de.aittr.g_31_2_shop.exception_handling.meaningful_exceptions.*;
 import de.aittr.g_31_2_shop.exception_handling.meaningless_exceptions.FourthTestException;
 import de.aittr.g_31_2_shop.exception_handling.meaningless_exceptions.ThirdTestException;
 import de.aittr.g_31_2_shop.repositories.jpa.JpaProductRepository;
@@ -20,7 +21,7 @@ public class JpaProductService implements ProductService {
 
     private JpaProductRepository repository;
     private ProductMappingService mappingService;
-//    private Logger logger = LogManager.getLogger(JpaProductService.class); // log4j-library
+    //    private Logger logger = LogManager.getLogger(JpaProductService.class); // log4j-library
     private Logger logger = LoggerFactory.getLogger(JpaProductService.class); // org.slf4j-library
 
     public JpaProductService(JpaProductRepository repository, ProductMappingService mappingService) {
@@ -43,10 +44,8 @@ public class JpaProductService implements ProductService {
     @Override
     public List<ProductDto> getAllActiveProducts() {
 //        Here will be placed JointPoint (helper code).
-        return repository.findAll().stream()
-                .filter(JpaProduct::isActive)  // p -> p.isActive()
-                .map(p -> mappingService.mapProductEntityToDto(p))
-                .toList();
+        return repository.findAll().stream().filter(JpaProduct::isActive)  // p -> p.isActive()
+                .map(p -> mappingService.mapProductEntityToDto(p)).toList();
     }
 
     @Override
@@ -89,6 +88,7 @@ public class JpaProductService implements ProductService {
         if (product != null && product.isActive()) {
             product.setActive(false);
         }
+        throw new WrongIdException("There is no product with the provided ID in the Database");
     }
 
     @Override
@@ -98,6 +98,8 @@ public class JpaProductService implements ProductService {
 
         if (product != null && product.isActive()) {
             product.setActive(false);
+        } else {
+            throw new ProductNameNotFoundException("There is no product with the name provided in the Database, or " + "the name is empty");
         }
     }
 
@@ -109,31 +111,40 @@ public class JpaProductService implements ProductService {
         if (product != null && !product.isActive()) {
             product.setActive(true);
         }
+        throw new WrongIdException("There is no product with the provided ID in the Database");
     }
 
     @Override
     public int getActiveProductCount() {
-        return (int) repository.findAll()
-                        .stream()
-                        .filter(p -> p.isActive())
-                        .count();
+        return (int) repository.findAll().stream().filter(p -> p.isActive()).count();
     }
 
     @Override
     public double getActiveProductTotalPrice() {
-        return repository.findAll()
-                .stream()
-                .filter(p -> p.isActive())
-                .mapToDouble(p -> p.getPrice())
+        return repository.findAll().stream()
+                .filter(p -> p != null && p.isActive())
+                .mapToDouble(p -> {
+                    if (p.getPrice() == 0) {
+                        throw new ZeroProductPriceException("The product price cannot be zero");
+                    }
+                    return p.getPrice();
+                })
                 .sum();
+//        return repository.findAll().stream().filter(p -> p.isActive()).mapToDouble(p -> p.getPrice()).sum();
     }
 
     @Override
     public double getActiveProductAvgPrice() {
-        return repository.findAll()
-                .stream()
-                .filter(p -> p.isActive())
-                .mapToDouble(p -> p.getPrice())
-                .average().orElse(0);
+        return repository.findAll().stream()
+                .filter(p -> p.isActive()).mapToDouble(p -> {
+            if (p.getPrice() < 0) {
+                throw new NegativeProductPriceException("The product price cannot be negative");
+            }
+            return p.getPrice();
+        })
+                .average()
+                .orElse(0);
+
+//        return repository.findAll().stream().filter(p -> p.isActive()).mapToDouble(p -> p.getPrice()).average().orElse(0);
     }
 }

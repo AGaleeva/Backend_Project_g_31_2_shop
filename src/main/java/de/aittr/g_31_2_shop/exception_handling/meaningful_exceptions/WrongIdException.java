@@ -1,10 +1,10 @@
 package de.aittr.g_31_2_shop.exception_handling.meaningful_exceptions;
 
-public class ProductNameNotFoundException extends RuntimeException {
+public class WrongIdException extends RuntimeException {
 
     private final long timestamp;
 
-    public ProductNameNotFoundException(String message) {
+    public WrongIdException(String message) {
         super(message);
         this.timestamp = System.currentTimeMillis();
     }
