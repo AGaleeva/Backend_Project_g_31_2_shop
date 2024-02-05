@@ -29,6 +29,13 @@ public class CommonAdvice {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IncorrectCustomerDataException.class)
+    public ResponseEntity<Response> handleException(IncorrectCustomerDataException e) {
+//        logger.error(String.format("Error: %s", e.getMessage()));
+        Response response = new Response(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ProductNameNotFoundException.class)
     public ResponseEntity<Response> handleException(ProductNameNotFoundException e) {
         return new ResponseEntity<>(new Response(e.getMessage(), e.getTimestamp()), HttpStatus.BAD_REQUEST);

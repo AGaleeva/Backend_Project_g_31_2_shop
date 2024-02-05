@@ -1,8 +1,8 @@
 package de.aittr.g_31_2_shop.services.jpa;
 
 import de.aittr.g_31_2_shop.domain.dto.CustomerDto;
-import de.aittr.g_31_2_shop.domain.interfaces.Customer;
 import de.aittr.g_31_2_shop.domain.jpa.JpaCustomer;
+import de.aittr.g_31_2_shop.exception_handling.meaningful_exceptions.IncorrectCustomerDataException;
 import de.aittr.g_31_2_shop.repositories.jpa.JpaCustomerRepository;
 import de.aittr.g_31_2_shop.services.interfaces.CustomerService;
 import de.aittr.g_31_2_shop.services.mapping.CustomerMappingService;
@@ -22,8 +22,16 @@ public class JpaCustomerService implements CustomerService {
     }
 
     @Override
-    public CustomerDto save(CustomerDto customer) {
-        return null;
+    public CustomerDto save(CustomerDto customerDto) {
+        try {
+            JpaCustomer entity = mappingService.mapDtoToJpaCustomer(customerDto);
+            entity.setId(0);
+            entity.getCart().setId(0);
+            entity = repository.save(entity);
+            return mappingService.mapCustomerEntityToDto(entity);
+        } catch (Exception e) {
+            throw new IncorrectCustomerDataException(e.getMessage());
+        }
     }
 
     @Override

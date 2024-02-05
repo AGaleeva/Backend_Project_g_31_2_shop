@@ -3,6 +3,8 @@ package de.aittr.g_31_2_shop.domain.jpa;
 import de.aittr.g_31_2_shop.domain.interfaces.Cart;
 import de.aittr.g_31_2_shop.domain.interfaces.Customer;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 
 import java.util.Objects;
 
@@ -18,6 +20,14 @@ public class JpaCustomer implements Customer {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "email")
+    @Email
+    private String email;
+
+    @Column(name = "age")
+    @Min(18)
+    private int age;
+
     @Column(name = "is_active")
     private boolean isActive;
 
@@ -28,9 +38,11 @@ public class JpaCustomer implements Customer {
     public JpaCustomer() {
     }
 
-    public JpaCustomer(int id, String name, boolean isActive, JpaCart cart) {
+    public JpaCustomer(int id, String name, String email, int age, boolean isActive, JpaCart cart) {
         this.id = id;
         this.name = name;
+        this.email = email;
+        this.age = age;
         this.isActive = isActive;
         this.cart = cart;
     }
@@ -77,6 +89,22 @@ public class JpaCustomer implements Customer {
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("Incompatible Cart type was passed to the setter");
         }
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     @Override

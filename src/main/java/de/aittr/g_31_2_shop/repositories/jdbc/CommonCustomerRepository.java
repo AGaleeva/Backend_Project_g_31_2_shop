@@ -64,20 +64,25 @@ public class CommonCustomerRepository implements CustomerRepository {
 
     @Override
     public List<Customer> getAll() {
+        return null;
+    }
+
+ /*   @Override
+    public List<Customer> getAll() {
         try (Connection connection = getConnection()) {
-            /*String query =            // MySQL-request
+            *//*String query =            // MySQL-request
                     "select cm.id, cm.name, ct.id, pr.id, pr.name, pr.price from customer as cm join cart as " + "ct " +
                             "on cm.id = ct.customer_id left join cart_product as cp on ct.id = cp.cart_id left join " +
                             "product as pr on cp.product_id = pr.id where cm.is_active = 1 and (pr.is_active = 1 or " +
-                            "pr.is_active is null);";*/
+                            "pr.is_active is null);";*//*
 
-           /* String query =      // PostgreSQL-request
+           *//* String query =      // PostgreSQL-request
                     "SELECT " + CUSTOMER_ID + ", " + CUSTOMER_NAME + ", " + CART_ID +
                             ", " + PRODUCT_ID + ", " + PRODUCT_NAME + ", " + PRICE +
                             " from customer as cm join cart as ct on cm.id = ct.customer_id " +
                             "left join cart_product as cp on ct.id = cp.cart_id " +
                             "left join product as pr on cp.product_id = pr.id " +
-                            "where cm.is_active = true and (pr.is_active = true OR pr.is_active IS NULL);";*/
+                            "where cm.is_active = true and (pr.is_active = true OR pr.is_active IS NULL);";*//*
 
 //            PostgreSQL-request with text-block syntax
 
@@ -91,7 +96,7 @@ public class CommonCustomerRepository implements CustomerRepository {
             ResultSet resultSet = connection.createStatement().executeQuery(query);
             Map<Integer, Customer> customers = new HashMap<>();
 
-            /*while (resultSet.next()) {        // MySQL-request
+            *//*while (resultSet.next()) {        // MySQL-request
 
                 int customerId = resultSet.getInt(CUSTOMER_ID);
                 Customer customer;
@@ -113,7 +118,7 @@ public class CommonCustomerRepository implements CustomerRepository {
                     double price = resultSet.getDouble(PRICE);
                     Product product = new CommonProduct(productId, true, productName, price);
                     customer.getCart().addProduct(product);
-                }*/
+                }*//*
             while (resultSet.next()) {      // PostgreSQL-request
 
                 int customerId = resultSet.getInt(1);  // CUSTOMER_ID
@@ -144,7 +149,7 @@ public class CommonCustomerRepository implements CustomerRepository {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 
     /*@Override
     public List<Customer> getAll() {
