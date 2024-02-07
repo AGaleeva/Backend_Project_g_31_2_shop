@@ -42,19 +42,15 @@ public class JpaCustomerService implements CustomerService {
         } catch (Exception e) {
             throw new IncorrectCustomerDataException(e.getMessage());
         }
-//        try {
-//            JpaCustomer entity = mappingService.mapDtoToJpaCustomer(customerDto);
-//            entity.setId(0);
-//            entity = repository.save(entity);
-//            return mappingService.mapCustomerEntityToDto(entity);
-//        } catch (Exception e) {
-//            throw new IncorrectCustomerDataException(e.getMessage());
-//        }
     }
 
     @Override
     public List<CustomerDto> getAllActiveCustomers() {
-        return null;
+        return repository.findAll()
+                .stream()
+                .filter(c -> c.isActive())
+                .map(c -> mappingService.mapCustomerEntityToDto(c))
+                .toList();
     }
 
     @Override

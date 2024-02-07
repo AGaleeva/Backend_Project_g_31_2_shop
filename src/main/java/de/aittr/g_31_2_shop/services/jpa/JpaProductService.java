@@ -92,9 +92,10 @@ public class JpaProductService implements ProductService {
         Product product = repository.findById(id).orElse(null);
 
         if (product != null && product.isActive()) {
-            product.setActive(false);
+        product.setActive(false);
+        } else {
+            throw new WrongIdException("There is no product with the provided ID in the Database");
         }
-        throw new WrongIdException("There is no product with the provided ID in the Database");
     }
 
     @Override
@@ -116,8 +117,9 @@ public class JpaProductService implements ProductService {
 
         if (product != null && !product.isActive()) {
             product.setActive(true);
+        } else {
+            throw new WrongIdException("There is no product with the provided ID in the Database");
         }
-        throw new WrongIdException("There is no product with the provided ID in the Database");
     }
 
     @Override
