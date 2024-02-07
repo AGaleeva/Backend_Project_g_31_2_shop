@@ -4,6 +4,8 @@ import de.aittr.g_31_2_shop.domain.interfaces.Cart;
 import de.aittr.g_31_2_shop.domain.interfaces.Customer;
 import de.aittr.g_31_2_shop.domain.interfaces.Product;
 import jakarta.persistence.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "cart")
 public class JpaCart implements Cart {
+
+    private static Logger logger = LoggerFactory.getLogger(JpaCart.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,11 +37,13 @@ public class JpaCart implements Cart {
     private List<JpaProduct> products = new ArrayList<>();
 
     public JpaCart() {
+        logger.info("Empty constructor of the class JpaCart called.");
     }
 
     public JpaCart(int id, List<JpaProduct> products) {
         this.id = id;
         this.products = products;
+        logger.info("Constructor of the class JpaCart called with fields id and products");
     }
 
     @Override

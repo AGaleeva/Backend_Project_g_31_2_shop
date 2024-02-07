@@ -5,12 +5,18 @@ import de.aittr.g_31_2_shop.domain.interfaces.Customer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 @Entity
 @Table(name = "customer")
 public class JpaCustomer implements Customer {
+
+    private static Logger logger = LoggerFactory.getLogger(JpaProduct.class);
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +37,7 @@ public class JpaCustomer implements Customer {
     @Column(name = "is_active")
     private boolean isActive;
 
-    @OneToOne(mappedBy = "customer") // указывается название поля с связанном классе JpaCart
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL) // указывается название поля с связанном классе JpaCart
     private JpaCart cart;               //  (поле private Customer customer;)
 
 
@@ -45,6 +51,7 @@ public class JpaCustomer implements Customer {
         this.age = age;
         this.isActive = isActive;
         this.cart = cart;
+        logger.info("Constructor of the class JpaCustomer called with fields id, name, email, isActive, cart");
     }
 
     @Override

@@ -27,12 +27,13 @@ public class CustomerMappingService {
     }
 
     public JpaCustomer mapDtoToJpaCustomer(CustomerDto customerDto) {
-        int id = customerDto.getId();
+//        int id = customerDto.getId();
         String name = customerDto.getName();
         String email = customerDto.getEmail();
         int age = customerDto.getAge();
-        JpaCart cart = cartMappingService.mapDtoToJpaCart(customerDto.getCart());
-        return new JpaCustomer(id, name, email, age, true, cart);
+//        JpaCart cart = cartMappingService.mapDtoToJpaCart(customerDto.getCart()); // Корзина будет создаваться и
+                                                                  // сетится в поле покупателя при сохранении последнего
+        return new JpaCustomer(0, name, email, age, true, null);
     }
 
     public CommonCustomer mapDtoToCommonCustomer(CustomerDto customerDto) {

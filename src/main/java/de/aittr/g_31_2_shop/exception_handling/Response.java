@@ -9,7 +9,7 @@ public class Response {
 
     @JsonProperty("errorTime")
     private final long timestamp;
-    private String message;
+    String message;
 
     public Response(String message, long timestamp) {
         this.message = message;

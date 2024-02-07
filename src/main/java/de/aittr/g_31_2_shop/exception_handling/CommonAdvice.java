@@ -17,7 +17,7 @@ public class CommonAdvice {
 
     @ExceptionHandler(ThirdTestException.class)
     public ResponseEntity<Response> handleException(ThirdTestException e) {
-        logger.error(String.format("Error: %s", e.getMessage()));
+//        logger.error(String.format("Error: %s", e.getMessage()));
         Response response = new Response(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -54,5 +54,12 @@ public class CommonAdvice {
     @ExceptionHandler(ZeroProductPriceException.class)
     public ResponseEntity<Response> handleException(ZeroProductPriceException e) {
         return new ResponseEntity<>(new Response(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ProductValidationException.class)
+    public ResponseEntity<ValidationResponse> handleException(ProductValidationException e) {
+        logger.warn("'%s' caused by %s".formatted(e.getMessage(), e.getCause().getMessage()));
+        ValidationResponse response = new ValidationResponse(e.getMessage(), e.getCause().getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

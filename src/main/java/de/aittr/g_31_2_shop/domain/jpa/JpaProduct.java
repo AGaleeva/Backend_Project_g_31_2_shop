@@ -3,12 +3,16 @@ package de.aittr.g_31_2_shop.domain.jpa;
 import de.aittr.g_31_2_shop.domain.interfaces.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 @Entity
 @Table(name = "product")
 public class JpaProduct implements Product {
+
+    private static Logger logger = LoggerFactory.getLogger(JpaProduct.class);
 
     // Pear - OK
     // pear - x
@@ -25,7 +29,7 @@ public class JpaProduct implements Product {
     @Column(name = "name")
 //    @NotNull
 //    @NotBlank
-    @Pattern(regexp = "[A-Z][a-z]{3,}")
+    @Pattern(regexp = "^[A-Z][a-z]{3,}(_[A-Za-z][a-z]*)?$")
     private String name;
 
     @Column(name = "price")
@@ -44,6 +48,7 @@ public class JpaProduct implements Product {
         this.name = name;
         this.price = price;
         this.isActive = isActive;
+        logger.info("Constructor of the class JpaProduct was called with fields 'id', 'name', 'price', 'isActive'");
     }
 
     @Override
