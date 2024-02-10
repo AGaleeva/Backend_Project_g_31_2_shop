@@ -38,8 +38,8 @@ public class JpaProductService implements ProductService {
             entity.setId(0);
             entity = repository.save(entity);
 
-            Task task = new Task("The last saved product is %s".formatted(entity.getName()));
-            SchedulerHwTasks.scheduleAndExecuteTask(task);
+//            Task task = new Task("The last saved product is %s".formatted(entity.getName()));
+//            SchedulerHwTasks.scheduleAndExecuteTask(task);
 
             logger.info("The following values were set: {}, {}, {}, {}", entity.getId(), entity.getName(),
                     entity.getPrice(), entity.isActive());
