@@ -52,7 +52,7 @@ public class ScheduleExecutor {
         }
     }*/
 
-    /*@Scheduled(fixedRate = 10000)
+    /*@Scheduled(fixedRate = 10000) // интервал будет 10 сек, поскольку это разница между началом двух задач
     public void fixedRateTask() {
         taskService.createTask("Fixed rate task that runs in 3000 ms");
         try {
@@ -62,7 +62,9 @@ public class ScheduleExecutor {
         }
     }*/
 
-    /*@Scheduled(fixedRate = 5000) // здесь они выполняются в однопоточном режиме, т.е. 2-я стартанет после 1-й
+    /*@Scheduled(fixedRate = 5000) // интервал между началом одной задачи и следующей будет 7 сек(продолжительность
+                                   // выполнения самой задачи), т.к. здесь они выполняются в однопоточном режиме,
+                                   // т.е. 2-я задача стартанет сразу после окончания 1-й
     public void fixedRateTask() {
         taskService.createTask("Fixed rate task that runs in 7000 ms");
         try {
@@ -73,7 +75,7 @@ public class ScheduleExecutor {
     }*/
 
     /*@Scheduled(fixedRate = 5000)
-    @Async
+    @Async                             // вводим асинхронность (вверху тоже), чтобы задачи выполнялись в разных потоках
     public void fixedRateAsyncTask() {
         taskService.createTask("Fixed rate async task that runs in 7000 ms");
         try {
@@ -108,11 +110,20 @@ public class ScheduleExecutor {
         TaskScheduler scheduler = new DefaultManagedTaskScheduler();
         scheduler.schedule(
                 () -> logger.info(task.getDescription()),
-                new CronTrigger("0,10,20,30,40,50 * * * * *")
+                new CronTrigger("0,10,20,30,50 * * * * *")
         );
     }*/
 
-    public static void scheduleAndExecuteTask(Task task) {
+  /*  public static void scheduleAndExecuteTask(Task task) {
+        TaskScheduler scheduler = new DefaultManagedTaskScheduler();
+        scheduler.schedule(
+//                () -> logger.info(task.getDescription()),
+                () -> TaskService.createTask(task.getDescription()),
+                new CronTrigger("0,10,20,30,50 * * * * *")
+        );
+    }*/
+
+   /* public static void scheduleAndExecuteTask(Task task) {
         TaskScheduler scheduler = new DefaultManagedTaskScheduler();
         Instant instant = Instant.now().plusSeconds(30);
 
@@ -120,5 +131,5 @@ public class ScheduleExecutor {
                 () -> logger.info(task.getDescription()),
                 instant
         );
-    }
+    }*/
 }

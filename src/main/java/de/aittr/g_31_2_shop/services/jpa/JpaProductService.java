@@ -8,6 +8,7 @@ import de.aittr.g_31_2_shop.exception_handling.meaningful_exceptions.*;
 import de.aittr.g_31_2_shop.exception_handling.meaningless_exceptions.ThirdTestException;
 import de.aittr.g_31_2_shop.repositories.jpa.JpaProductRepository;
 import de.aittr.g_31_2_shop.scheduling.ScheduleExecutor;
+import de.aittr.g_31_2_shop.scheduling.SchedulerHwTasks;
 import de.aittr.g_31_2_shop.services.interfaces.ProductService;
 import de.aittr.g_31_2_shop.services.mapping.ProductMappingService;
 import jakarta.transaction.Transactional;
@@ -36,6 +37,10 @@ public class JpaProductService implements ProductService {
             JpaProduct entity = mappingService.mapDtoToJpaProduct(dto);
             entity.setId(0);
             entity = repository.save(entity);
+
+            Task task = new Task("The last saved product is %s".formatted(entity.getName()));
+            SchedulerHwTasks.scheduleAndExecuteTask(task);
+
             logger.info("The following values were set: {}, {}, {}, {}", entity.getId(), entity.getName(),
                     entity.getPrice(), entity.isActive());
             return mappingService.mapProductEntityToDto(entity);
@@ -48,7 +53,8 @@ public class JpaProductService implements ProductService {
     @Override
     public List<ProductDto> getAllActiveProducts() {
         Task task = new Task("The method getAllActiveProducts() called");
-        ScheduleExecutor.scheduleAndExecuteTask(task);
+//        ScheduleExecutor.scheduleAndExecuteTask(task); // для запуска задачи по расписанию в кл. ScheduleExecutor
+
 //        Here will be placed JointPoint (helper code).
         return repository.findAll().stream().filter(JpaProduct::isActive)  // p -> p.isActive()
                 .map(p -> mappingService.mapProductEntityToDto(p)).toList();

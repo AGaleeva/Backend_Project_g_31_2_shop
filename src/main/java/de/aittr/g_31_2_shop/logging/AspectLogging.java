@@ -95,8 +95,7 @@ public class AspectLogging {
     }*/
 
     @Pointcut("within(de.aittr.g_31_2_shop.services.jpa.JpaProductService)")
-    public void allMethodsInJpaProductService() {
-    }
+    public void allMethodsInJpaProductService() {}
 
     @Before("allMethodsInJpaProductService()")
     public void beforeMethodsInJpaProductService(JoinPoint joinPoint) {
@@ -116,8 +115,7 @@ public class AspectLogging {
     }
 
     @Pointcut("within(de.aittr.g_31_2_shop.services..*)")
-    public void allServicesMethods() {
-    }
+    public void allServicesMethods() {}
 
     @Before("allServicesMethods()")
     public void beforeServiceMethodExecution(JoinPoint joinPoint) {

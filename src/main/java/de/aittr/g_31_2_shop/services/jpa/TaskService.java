@@ -9,16 +9,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class TaskService {
 
-    private TaskRepository repository;
-    private Logger logger = LoggerFactory.getLogger(TaskService.class);
+    private static TaskRepository repository;
+//    private TaskRepository repository;
+    private static Logger logger = LoggerFactory.getLogger(TaskService.class);
 
     public TaskService(TaskRepository repository) {
-        this.repository = repository;
+        TaskService.repository = repository;
     }
+//    public TaskService(TaskRepository repository) {
+//        this.repository = repository;
+//    }
 
-    public void createTask(String description) {
+   /* public void createTask(String description) {
         logger.info(description);
         Task task = new Task(description);
         repository.save(task);
+    }*/
+
+    public static Task createTask(String description) {
+        logger.info(description);
+        Task task = new Task(description);
+        repository.save(task);
+        return task;
     }
 }
