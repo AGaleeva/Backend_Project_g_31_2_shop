@@ -44,6 +44,5 @@ public class SchedulerHwTasks {
     @Scheduled(cron = "15,45 * * * * *")
     public void scheduleAndExecuteTask() {
        Task task = createSavedTask();
-       logger.info(task.getDescription());
     }
 }
